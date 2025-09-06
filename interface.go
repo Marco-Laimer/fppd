@@ -6,6 +6,8 @@
 package main
 
 import (
+	"strings" // Adicionado para lidar com as strings da barra de status para mostrar 2 ou mais linhas /Marco
+
 	"github.com/nsf/termbox-go"
 )
 
@@ -14,18 +16,18 @@ type Cor = termbox.Attribute
 
 // Definições de cores utilizadas no jogo
 const (
-	CorPadrao     Cor = termbox.ColorDefault
-	CorCinzaEscuro    = termbox.ColorDarkGray
-	CorVermelho       = termbox.ColorRed
-	CorVerde          = termbox.ColorGreen
-	CorParede         = termbox.ColorBlack | termbox.AttrBold | termbox.AttrDim
-	CorFundoParede    = termbox.ColorDarkGray
-	CorTexto          = termbox.ColorDarkGray
+	CorPadrao      Cor = termbox.ColorDefault
+	CorCinzaEscuro     = termbox.ColorDarkGray
+	CorVermelho        = termbox.ColorRed
+	CorVerde           = termbox.ColorGreen
+	CorParede          = termbox.ColorWhite | termbox.AttrBold | termbox.AttrDim
+	CorFundoParede     = termbox.ColorBlack
+	CorTexto           = termbox.ColorDarkGray
 )
 
 // EventoTeclado representa uma ação detectada do teclado (como mover, sair ou interagir)
 type EventoTeclado struct {
-	Tipo  string // "sair", "interagir", "mover"
+	Tipo  string // "sair", "interagir", "mover", "direcao"
 	Tecla rune   // Tecla pressionada, usada no caso de movimento
 }
 
@@ -53,6 +55,20 @@ func interfaceLerEventoTeclado() EventoTeclado {
 	if ev.Ch == 'e' {
 		return EventoTeclado{Tipo: "interagir"}
 	}
+	// Identifica as setas do teclado para a direção de interação
+	if ev.Key == termbox.KeyArrowUp {
+		return EventoTeclado{Tipo: "direcao", Tecla: 'w'}
+	}
+	if ev.Key == termbox.KeyArrowDown {
+		return EventoTeclado{Tipo: "direcao", Tecla: 's'}
+	}
+	if ev.Key == termbox.KeyArrowLeft {
+		return EventoTeclado{Tipo: "direcao", Tecla: 'a'}
+	}
+	if ev.Key == termbox.KeyArrowRight {
+		return EventoTeclado{Tipo: "direcao", Tecla: 'd'}
+	}
+
 	return EventoTeclado{Tipo: "mover", Tecla: ev.Ch}
 }
 
@@ -94,15 +110,20 @@ func interfaceDesenharElemento(x, y int, elem Elemento) {
 
 // Exibe uma barra de status com informações úteis ao jogador
 func interfaceDesenharBarraDeStatus(jogo *Jogo) {
-	// Linha de status dinâmica
-	for i, c := range jogo.StatusMsg {
-		termbox.SetCell(i, len(jogo.Mapa)+1, c, CorTexto, CorPadrao)
+	// Divide a mensagem de status em linhas usando o caractere de nova linha
+	linhas := strings.Split(jogo.StatusMsg, "\n")
+
+	// Itera sobre cada linha e desenha na tela
+	for i, linha := range linhas {
+		for j, c := range linha {
+			// A posição Y é calculada com base no índice da linha
+			termbox.SetCell(j, len(jogo.Mapa)+1+i, c, CorTexto, CorPadrao)
+		}
 	}
 
 	// Instruções fixas
-	msg := "Use WASD para mover e E para interagir. ESC para sair."
+	msg := "Use WASD para mover e E para interagir,Setas para escolher o locar de interagir e ESC para sair."
 	for i, c := range msg {
 		termbox.SetCell(i, len(jogo.Mapa)+3, c, CorTexto, CorPadrao)
 	}
 }
-

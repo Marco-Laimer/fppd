@@ -52,7 +52,7 @@ Também é possivel compilar o projeto usando o comando `make` no Linux ou o scr
 2. Execute o programa no termimal:
 
 ```bash
-./jogo
+./jogo  
 ```
 
 ## Estrutura do projeto
