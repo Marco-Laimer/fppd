@@ -30,6 +30,7 @@ var (
 	Parede     = Elemento{'▓', CorParede, CorFundoParede, true}
 	Vegetacao  = Elemento{'♣', CorVerde, CorPadrao, false}
 	Vazio      = Elemento{' ', CorPadrao, CorPadrao, false}
+	Botao      = Elemento{'x', CorPadrao, CorPadrao, false}
 )
 
 // Cria e retorna uma nova instância do jogo
@@ -40,7 +41,7 @@ func jogoNovo() Jogo {
 		UltimoVisitado: Vazio,
 		UltimaDirX:     1, // Define a direção inicial para a direita
 		UltimaDirY:     0,
-		StatusMsg:      "Direção de interação: Direita", // Define a mensagem inicial
+		StatusMsg:      "Direção de interacao: Direita", // Define a mensagem inicial
 	}
 }
 
@@ -66,6 +67,8 @@ func jogoCarregarMapa(nome string, jogo *Jogo) error {
 				e = Inimigo
 			case Vegetacao.simbolo:
 				e = Vegetacao
+			case Botao.simbolo:
+				e = Botao
 			case Personagem.simbolo:
 				jogo.PosX, jogo.PosY = x, y // registra a posição inicial do personagem
 			}

@@ -3,7 +3,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 	// Adicione esta linha
 )
 
@@ -39,10 +38,13 @@ func personagemMover(tecla rune, jogo *Jogo) {
 // Neste exemplo, apenas exibe uma mensagem de status
 // Você pode expandir essa função para incluir lógica de interacao com objetos
 func personagemInteragir(jogo *Jogo) {
-	// Atualmente apenas exibe uma mensagem de status
-	jogo.StatusMsg += fmt.Sprintf("\n -Interagindo em (%d, %d)", jogo.PosX, jogo.PosY)
-	interfaceDesenharElemento(jogo.PosX+1, jogo.PosY, Inimigo)
-	time.Sleep(time.Second * 5)
+	//Coloca qual elemento esta interagindo
+	alvoX := jogo.PosX + jogo.UltimaDirX
+	alvoY := jogo.PosY + jogo.UltimaDirY
+
+	jogo.StatusMsg += fmt.Sprintf("\n -Interagindo em (%d, %d)", alvoX, alvoY)
+
+	//time.Sleep(time.Second * 5)
 
 }
 func personagemDefinirDirecao(tecla rune, jogo *Jogo) {
