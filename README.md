@@ -61,9 +61,3 @@ Também é possivel compilar o projeto usando o comando `make` no Linux ou o scr
 - interface.go — Entrada, saída e renderização com termbox
 - jogo.go — Estruturas e lógica do estado do jogo
 - personagem.go — Ações do jogador
-
-
-
-
-
-TESTE RAMBOR --> GAY 
