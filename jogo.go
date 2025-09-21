@@ -4,6 +4,7 @@ package main
 import (
 	"bufio"
 	"os"
+	"time"
 )
 
 // Elemento representa qualquer objeto do mapa (parede, personagem, vegetação, etc)
@@ -25,11 +26,13 @@ type Jogo struct {
 
 // Elementos visuais do jogo
 var (
-	Personagem = Elemento{'☺', CorCinzaEscuro, CorPadrao, true}
-	Inimigo    = Elemento{'☠', CorVermelho, CorPadrao, true}
-	Parede     = Elemento{'▓', CorParede, CorFundoParede, true}
-	Vegetacao  = Elemento{'♣', CorVerde, CorPadrao, false}
-	Vazio      = Elemento{' ', CorPadrao, CorPadrao, false}
+	Personagem    = Elemento{'☺', CorCinzaEscuro, CorPadrao, true}
+	Inimigo       = Elemento{'☠', CorVermelho, CorPadrao, true}
+	Parede        = Elemento{'▓', CorParede, CorFundoParede, true}
+	Vegetacao     = Elemento{'♣', CorVerde, CorPadrao, false}
+	Vazio         = Elemento{' ', CorPadrao, CorPadrao, false}
+	Botao         = Elemento{'■', CorVerde, CorVerde, true}
+	BotaoVermelho = Elemento{'■', CorVermelho, CorVermelho, true}
 )
 
 // Cria e retorna uma nova instância do jogo
@@ -68,6 +71,8 @@ func jogoCarregarMapa(nome string, jogo *Jogo) error {
 				e = Vegetacao
 			case Personagem.simbolo:
 				jogo.PosX, jogo.PosY = x, y // registra a posição inicial do personagem
+			case Botao.simbolo:
+				e = Botao
 			}
 			linhaElems = append(linhaElems, e)
 		}
@@ -111,4 +116,22 @@ func jogoMoverElemento(jogo *Jogo, x, y, dx, dy int) {
 	jogo.Mapa[y][x] = jogo.UltimoVisitado   // restaura o conteúdo anterior
 	jogo.UltimoVisitado = jogo.Mapa[ny][nx] // guarda o conteúdo atual da nova posição
 	jogo.Mapa[ny][nx] = elemento            // move o elemento
+}
+
+func jogoPiscarBotao(jogo *Jogo, x, y int, intervaloMs int) {
+	visivel := true
+	for {
+		if visivel {
+			jogo.Mapa[y][x] = BotaoVermelho // atualiza o estado do mapa
+		} else {
+			jogo.Mapa[y][x] = Botao
+		}
+		visivel = !visivel
+
+		// Apenas redesenha essa célula
+		interfaceDesenharElemento(x, y, jogo.Mapa[y][x])
+		interfaceAtualizarTela()
+
+		time.Sleep(time.Millisecond * time.Duration(intervaloMs))
+	}
 }
