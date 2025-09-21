@@ -63,3 +63,7 @@ Também é possivel compilar o projeto usando o comando `make` no Linux ou o scr
 - personagem.go — Ações do jogador
 
 
+
+
+
+TESTE RAMBOR --> GAY 
